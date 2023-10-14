@@ -1,5 +1,9 @@
-# Source the configuration script
-source ~/CnC-Agent/config.sh
+#!/bin/bash
+# Install needed tools for installation script to work
+apt-get install sudo >/dev/null 2>&1
+apt-get install git >/dev/null 2>&1
+apt-get install jq -y >/dev/null 2>&1
+
 
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
@@ -31,26 +35,36 @@ else
     VER=$(uname -r)
 fi
 
-user=$(whoami)
+user=$(id -u -n)
 
 
 ## Check if OS is Debian 10 
 if [[ $OS == "Debian GNU/Linux" && $VER == "10" ]]; then
     
     ## Run Debian Installer
-    bash "$deb_ins"
+    bash <(wget -qO- https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/Functions/Run-Install-Debian.sh)
+
 
 ## Check if OS is Debian 10     
 elif [[ $OS == "Debian GNU/Linux" && $VER == "11" ]]; then
     
     ## Run Debian Installer
-    bash "$deb_ins"
+    bash <(wget -qO- https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/Functions/Run-Install-Debian.sh)
+
 
 ## Check if OS is Ubuntu 22.04 and root user
 elif [[ $OS == "Ubuntu" && $VER == "22.04" && $user == "root" ]]; then
     
     ## Run Debian Installer
-    bash "$deb_ins"
+    bash <(wget -qO- https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/Functions/Run-Install-Debian.sh)
+
+
+## Check if OS is Ubuntu 22.04 and "normal user"
+elif [[ $OS == "Ubuntu" && $VER == "22.04" && $user != "root" ]]; then
+    
+    ## Run Ubuntu Installer
+    bash <(wget -qO- https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/Functions/Run-Install-Debian.sh)
+
 
 else
 echo "Unsupported OS"
