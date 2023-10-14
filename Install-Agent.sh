@@ -1,3 +1,5 @@
+git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
+
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 

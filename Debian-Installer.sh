@@ -1,5 +1,4 @@
 # Source the configuration script
-source ~/CnC-WebGUI/config.sh
 source ~/CnC-Agent/config.sh
 
 # Add a sleep to allow source check
