@@ -50,7 +50,7 @@ bash "$over_cron" > /dev/null 2>&1
 ln -s "$cron_cron" /usr/bin/ > /dev/null 2>&1
 
 # Remove and add the cron job for cronjob.sh
-remove_and_add_cron_job "$cron_cron" > /dev/null 2>&1
+remove_and_add_cron_job "$cron_cron" 
 
 ## Run Packages Reporting for the first time
-bash "$cron_cron"
+bash "$cron_cron" > /dev/null 2>&1
