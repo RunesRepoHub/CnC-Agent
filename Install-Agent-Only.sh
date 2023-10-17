@@ -11,17 +11,16 @@ if [ -d "$FILE" ]; then
     ## Move to a new line
     echo
     ## Check user input    
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
         ## Remove old files
         rm -r ~/Install-Agent
         ## Clones new files
         echo
         echo
-        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
+        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git
         ## Runs the installation script
-        bash ~/CnC-Agent/Install-Agent.sh;
-else
-        bash ~/CnC-Agent/Install-Agent.sh;
-fi
+        bash ~/CnC-Agent/Install-Agent.sh
+    else
+        bash ~/CnC-Agent/Install-Agent.sh
+    fi
 fi
