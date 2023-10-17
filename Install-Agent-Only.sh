@@ -18,6 +18,17 @@ White='\e[1;37m'
 NC='\e[0m'  # Reset to default
 ###################
 
+# Install needed tools for installation script to work
+echo -e "${Purple}Move to root directory${NC}"
+cd
+echo -e "${Yellow}Install sudo, Git, jq${NC}"
+apt-get install sudo >/dev/null 2>&1
+apt-get install git -y >/dev/null 2>&1
+apt-get install jq -y >/dev/null 2>&1
+echo -e "${Yellow}Install updates and Upgrade${NC}"
+apt-get updates >/dev/null 2>&1
+apt-get upgrade -y >/dev/null 2>&1
+
 FILE=~/CnC-Agent
 if [ -d "$FILE" ]; then
     ## Clear screen for better overview
