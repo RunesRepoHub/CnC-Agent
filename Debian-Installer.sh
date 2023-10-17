@@ -35,7 +35,7 @@ ln -s "$pack_cron" /usr/bin/ > /dev/null 2>&1
 remove_and_add_cron_job "$pack_cron"
 
 ## Run Packages Reporting for the first time
-bash "$pack_cron" > /dev/null 2>&1
+bash "$pack_cron" 
 
 # Check/Setup Packages Reporting via cron
 ln -s "$over_cron" /usr/bin/ > /dev/null 2>&1
@@ -44,7 +44,7 @@ ln -s "$over_cron" /usr/bin/ > /dev/null 2>&1
 remove_and_add_cron_job "$over_cron"
 
 ## Run Packages Reporting for the first time
-bash "$over_cron" > /dev/null 2>&1
+bash "$over_cron" 
 
 # Check/Setup Packages Reporting via cron
 ln -s "$cron_cron" /usr/bin/ > /dev/null 2>&1
@@ -53,7 +53,7 @@ ln -s "$cron_cron" /usr/bin/ > /dev/null 2>&1
 remove_and_add_cron_job "$cron_cron" 
 
 ## Run Packages Reporting for the first time
-bash "$cron_cron" > /dev/null 2>&1
+bash "$cron_cron" 
 
 ## Make a file to check if installation was successful
 touch "$clientinstallcon"
