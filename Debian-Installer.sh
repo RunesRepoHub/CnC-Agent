@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Define the paths of the scripts you want to remove from the crontab
+pack_cron="/root/CnC-Agent/Debian-Scripts/Packages.sh"
+over_cron="/root/CnC-Agent/Debian-Scripts/Overview.sh"
+cron_cron="/root/CnC-Agent/Debian-Scripts/Cronjob.sh"
+
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 
@@ -16,44 +21,45 @@ read -p "Database IP: " databaseip
 touch "$dbip"
 echo "$databaseip" > "$dbip"
 
-# Function to remove and add a cron job
-remove_and_add_cron_job() {
-    local script_name="$1"
-    local cron_command="5 * * * * bash $script_name"
-    
-    # Remove existing cron job with the same script name
-    crontab -l | grep -v "$script_name" | crontab -
+#!/bin/bash
 
-    # Add the new cron job
-    { crontab -l; echo "$cron_command"; } | crontab -
+# Paths to the scripts
+pack_cron="/root/CnC-Agent/Debian-Scripts/Packages.sh"
+over_cron="/root/CnC-Agent/Debian-Scripts/Overview.sh"
+cron_cron="/root/CnC-Agent/Debian-Scripts/Cronjob.sh"
+
+# Function to check if a cron job exists in /etc/crontab
+cron_job_exists() {
+    local script_path="$1"
+    local cron_command="5 * * * * root bash $script_path"
+    
+    # Use `grep` to check if the cron command already exists in /etc/crontab
+    grep -qF "$cron_command" /etc/crontab
 }
 
-# Check/Setup Packages Reporting via cron
-ln -s "$pack_cron" /usr/bin/ > /dev/null 2>&1
+# Function to add a cron job to /etc/crontab
+add_cron_job() {
+    local script_path="$1"
+    local cron_command="5 * * * * root bash $script_path"
+    
+    # Append the cron job to /etc/crontab
+    echo "$cron_command" | sudo tee -a /etc/crontab
+    echo "Added cron job for $script_path"
+}
 
-# Remove and add the cron job for packages.sh
-remove_and_add_cron_job "$pack_cron"
+# Add cron jobs if they do not exist in /etc/crontab
+if ! cron_job_exists "$pack_cron"; then
+    add_cron_job "$pack_cron"
+fi
 
-## Run Packages Reporting for the first time
-bash "$pack_cron" 
+if ! cron_job_exists "$over_cron"; then
+    add_cron_job "$over_cron"
+fi
 
-# Check/Setup Packages Reporting via cron
-ln -s "$over_cron" /usr/bin/ > /dev/null 2>&1
+if ! cron_job_exists "$cron_cron"; then
+    add_cron_job "$cron_cron"
+fi
 
-# Remove and add the cron job for overview.sh
-remove_and_add_cron_job "$over_cron"
-
-## Run Packages Reporting for the first time
-bash "$over_cron" 
-
-# Check/Setup Packages Reporting via cron
-ln -s "$cron_cron" /usr/bin/ > /dev/null 2>&1
-
-# Remove and add the cron job for cronjob.sh
-remove_and_add_cron_job "$cron_cron" 
-
-## Run Packages Reporting for the first time
-bash "$cron_cron" 
 
 ## Make a file to check if installation was successful
 touch "$clientinstallcon"
