@@ -24,3 +24,4 @@ if [ -d "$FILE" ]; then
 else
         bash ~/CnC-Agent/Install-Agent.sh;
 fi
+fi
