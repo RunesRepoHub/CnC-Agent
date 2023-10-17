@@ -1,4 +1,4 @@
-FILE=~/Install-Agent
+FILE=~/CnC-Agent
 if [ -d "$FILE" ]; then
     ## Clear screen for better overview
     
@@ -13,23 +13,23 @@ if [ -d "$FILE" ]; then
     ## Check user input    
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         ## Remove old files
-        rm -rf ~/Install-Agent
+        rm -rf ~/CnC-Agent
         ## Clones new files
         echo
         echo
-        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git
+        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
         ## Runs the installation script
-        bash ~/CnC-Agent/Install-Agent.sh
+        bash ~/CnC-Agent/Install-Agent.sh;
     else
-        bash ~/CnC-Agent/Install-Agent.sh
+        bash ~/CnC-Agent/Install-Agent.sh;
     fi
-else
-    ## If the directory doesn't exist, create it
-    mkdir -p ~/Install-Agent
+else 
+    ## If the files has not been download before
+    echo "$FILE does not exist."
     ## Clones new files
     echo
     echo
-    git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git ~/Install-Agent
+    git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
     ## Runs the installation script
-    bash ~/Install-Agent/Install-Agent.sh
-fi
+    bash ~/CnC-Agent/Install-Agent.sh;
+fi 
