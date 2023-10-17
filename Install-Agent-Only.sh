@@ -54,3 +54,11 @@ else
     ## Runs the installation script
     bash ~/CnC-Agent/Install-Agent.sh;
 fi 
+
+if [ -f ~/CnC-WebGUI/.serverinstallcon ] && [ -f ~/CnC-Agent/.clientinstallcon ]; then
+    echo -e "${Green}Both Agent and Server was installed successful${NC}"
+elif  [ -f ~/CnC-Agent/.clientinstallcon ]; then
+    echo -e "${Green}The Agent was installed successful${NC}"
+else
+    echo -e "${Red}Installation has failed${NC}"
+fi
