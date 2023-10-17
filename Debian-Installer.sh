@@ -54,3 +54,7 @@ remove_and_add_cron_job "$cron_cron"
 
 ## Run Packages Reporting for the first time
 bash "$cron_cron" > /dev/null 2>&1
+
+## Make a file to check if installation was successful
+touch "$clientinstallcon"
+echo "yes" > "$clientinstallcon"
