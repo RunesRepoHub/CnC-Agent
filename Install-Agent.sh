@@ -1,5 +1,5 @@
 # Source the configuration script
-source ~/CnC-WebGUI/config.sh
+source ~/CnC-Agent/config.sh
 
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd

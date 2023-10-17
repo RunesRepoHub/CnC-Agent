@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source the configuration script
-source ~/CnC-WebGUI/config.sh
+source ~/CnC-Agent/config.sh
 
 me=$(basename "$0")
 databaseip=$(cat "$dbip")
