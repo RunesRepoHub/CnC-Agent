@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Version tag
-Version="1.2"
+Version="curl https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/CnC-WebGUI/.env | sed 's/.\{8\}//'"
 
 # Global Variables
 dbip="/root/CnC-WebGUI/CnC-Agent/.databaseip"
