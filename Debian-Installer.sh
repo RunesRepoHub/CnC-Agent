@@ -40,7 +40,7 @@ cron_job_exists() {
 # Function to add a cron job to /etc/crontab
 add_cron_job() {
     local script_path="$1"
-    local cron_command="5 * * * * root bash $script_path"
+    local cron_command="* * * * * root bash $script_path"
     
     # Append the cron job to /etc/crontab
     echo "$cron_command" | sudo tee -a /etc/crontab
