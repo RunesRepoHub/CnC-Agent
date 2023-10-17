@@ -19,6 +19,7 @@ if [ -d "$FILE" ]; then
         echo
         git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
         ## Runs the installation script
+        wget -O ~/CnC-Agent/config.sh "$get_config_url" > /dev/null 2>&1;
         bash ~/CnC-Agent/Install-Agent.sh;
     else
         bash ~/CnC-Agent/Install-Agent.sh;
