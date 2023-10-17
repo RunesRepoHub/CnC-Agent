@@ -1,6 +1,7 @@
 #!/bin/bash
+
 # Source the configuration script
-source ~/CnC-Agent/config.sh
+source ~/CnC-WebGUI/config.sh
 
 me=$(basename "$0")
 databaseip=$(cat "$dbip")
@@ -24,14 +25,17 @@ fi
 
 distro="$OS $VER"
 
-# Define the URL for reading data
+# Define your REST API endpoints for reading and updating data
 READ_API_ENDPOINT="http://$databaseip:3000/read/info/$hostname"
+UPDATE_API_ENDPOINT="http://$databaseip:3000/update/info/$hostname"
+CREATE_API_ENDPOINT="http://$databaseip:3000/create/info"
 
 # Fetch existing data from the API
 existing_data=$(curl -s "$READ_API_ENDPOINT")
 
 if [ -n "$existing_data" ]; then
   echo "Data for hostname $hostname exists. Updating..."
+
   # Extract existing data and compare with new data
   existing_ip_address=$(echo "$existing_data" | jq -r .ipaddress)
   existing_mac_address=$(echo "$existing_data" | jq -r .macaddress)
@@ -65,7 +69,6 @@ if [ -n "$existing_data" ]; then
   }'
 
   # Send a PUT request to update the data
-  UPDATE_API_ENDPOINT="http://$databaseip:3000/update/info/$hostname"
   response=$(curl -X PUT -H "Content-Type: application/json" -d "$DATA" "$UPDATE_API_ENDPOINT")
 
   if [ "$response" == "Data updated" ]; then
@@ -86,7 +89,6 @@ else
   }'
 
   # Send a POST request to insert the data
-  CREATE_API_ENDPOINT="http://$databaseip:3000/create/info"
   response=$(curl -X POST -H "Content-Type: application/json" -d "$DATA" "$CREATE_API_ENDPOINT")
 
   if [ "$response" == "Data inserted" ]; then

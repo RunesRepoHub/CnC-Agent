@@ -1,5 +1,5 @@
 # Source the configuration script
-source ~/CnC-Agent/config.sh
+source ~/CnC-WebGUI/config.sh
 
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
@@ -32,7 +32,6 @@ else
 fi
 
 user=$(whoami)
-
 
 ## Check if OS is Debian 10 
 if [[ $OS == "Debian GNU/Linux" && $VER == "10" ]]; then
