@@ -17,19 +17,19 @@ if [ -d "$FILE" ]; then
         ## Clones new files
         echo
         echo
-        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
+        git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git
         ## Runs the installation script
-        bash ~/CnC-Agent/Install-Agent.sh;
+        bash ~/CnC-Agent/Install-Agent.sh
     else
-        bash ~/CnC-Agent/Install-Agent.sh;
+        bash ~/CnC-Agent/Install-Agent.sh
     fi
-else 
-    ## If the files has not been download before
-    echo "$FILE does not exist."
+else
+    ## If the directory doesn't exist, create it
+    mkdir -p ~/Install-Agent
     ## Clones new files
     echo
     echo
-    git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git;
+    git clone --branch Dev https://github.com/RunesRepoHub/CnC-Agent.git ~/Install-Agent
     ## Runs the installation script
-    bash ~/CnC-Agent/Install-Agent.sh;
-fi 
+    bash ~/Install-Agent/Install-Agent.sh
+fi
