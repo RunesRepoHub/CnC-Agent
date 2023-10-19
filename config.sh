@@ -37,7 +37,6 @@ clientinstallcon="/root/CnC-Agent/.clientinstallcon"
 # Getting-started.sh
 CnC_Image_Builder="/root/CnC-WebGUI/Functions/CnC-Image-Builder.sh"
 Install_Agent="/root/CnC-Agent/Install-Agent.sh"
-Uninstall="/root/CnC-WebGUI/Functions/Uninstall.sh"
 
 # Cronjob.sh 
 crontxt="/root/CnC-Agent/cron.txt"
