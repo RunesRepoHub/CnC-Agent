@@ -11,15 +11,21 @@ API_READ_ENDPOINT="http://$databaseip:3000/read/packages"
 API_CREATE_ENDPOINT="http://$databaseip:3000/create/packages"
 API_UPDATE_ENDPOINT="http://$databaseip:3000/update/packages"
 
-# Function to retrieve all installed packages and their versions
+# Function to retrieve all installed packages
 get_installed_packages() {
-    dpkg -l | awk '/^ii/ {print $2, $3}'
+    dpkg -l | awk '/^ii/ {print $2}'
 }
 
 # Retrieve the database data for the specified hostname
 get_database_packages() {
     local hostname="$1"
     curl -s "$API_READ_ENDPOINT/$hostname"
+}
+
+# Function to check if a package is installed and return "Installed" or "Not Installed"
+check_installed() {
+    local package_name="$1"
+    dpkg -l | grep -q "^ii $package_name " && echo "Installed" || echo "Not Installed"
 }
 
 # Check if there are installed packages
@@ -33,22 +39,16 @@ fi
 hostname="$HOSTNAME"
 db_packages_json=$(get_database_packages "$hostname")
 
-for package_info in $installed_packages; do
-    package_name=$(echo "$package_info" | awk '{print $1}')
-    package_version=$(echo "$package_info" | awk '{print $2}')
-
-    data='{"hostname":"'"$hostname"'","packagename":"'"$package_name"'","packageversion":"'"$package_version"'"}'
-
-    if ! echo "$db_packages_json" | jq -r '.[] | select(.packagename == "'"$package_name"'" and .packageversion == "'"$package_version"'")' >/dev/null; then
-        if [ -z "$db_packages_json" ] || [ "$db_packages_json" == "null" ]; then
-            # Data doesn't exist, so create a new entry
-            response=$(curl -X POST -H "Content-Type: application/json" -d "$data" "$API_CREATE_ENDPOINT")
-            echo "Data inserted from $me."
-        else
-            # Data exists, so update it
-            response=$(curl -X PUT -H "Content-Type: application/json" -d "$data" "$API_UPDATE_ENDPOINT/$hostname")
-            echo "Data updated from $me."
-        fi
+for package_name in $installed_packages; do
+    # Check if the package is in the database
+    if echo "$db_packages_json" | jq -e '.[] | select(.hostname == "'"${hostname}"'" and .packagename == "'"${package_name}"'")' >/dev/null; then
+        echo "Data for package $package_name is up to date."
+    else
+        # Data doesn't exist, so create a new entry with "Installed" or "Not Installed" status
+        status=$(check_installed "$package_name")
+        data='{"hostname":"'"$hostname"'","packagename":"'"$package_name"'","installed":"'"$status"'"}'
+        response=$(curl -X POST -H "Content-Type: application/json" -d "$data" "$API_CREATE_ENDPOINT")
+        echo "Data inserted from $me for package $package_name. Status: $status"
     fi
 done
 
