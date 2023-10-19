@@ -3,10 +3,10 @@
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 
-me=$(basename "$0")
 databaseip=$(cat "$dbip")
+me=$(basename "$0")
 
-# Function to check if a package is installed
+# Define a function to check if a package is installed
 package_installed() {
     local package_name=$1
     if dpkg -l | grep -q "ii  $package_name "; then
@@ -16,53 +16,38 @@ package_installed() {
     fi
 }
 
-API_READ_ENDPOINT="http://$databaseip:3000/read/packages"
+# Define your REST API endpoints for creating and updating data
 API_CREATE_ENDPOINT="http://$databaseip:3000/create/packages"
 API_UPDATE_ENDPOINT="http://$databaseip:3000/update/packages"
 
-# Define your hostname
-hostname="$HOSTNAME"
+# Modify the hostname to escape double quotes
+escaped_hostname=$(echo "$HOSTNAME" | sed 's/"/\\"/g')
 
-# Function to send an HTTP GET request to check if the package data exists in the database
-send_read_request() {
-    local package_name="$1"
-    local response=$(curl -s "$API_READ_ENDPOINT/$hostname/$package_name")
-    echo "$response"
-}
-
-# Function to send an HTTP POST request to create a package record
-send_create_request() {
-    local data="$1"
-    curl -X POST -H "Content-Type: application/json" -d "$data" "$API_CREATE_ENDPOINT"
-}
-
-# Function to send an HTTP PUT request to update a package record
-send_update_request() {
-    local package_name="$1"
-    local data="$2"
-    curl -X PUT -H "Content-Type: application/json" -d "$data" "$API_UPDATE_ENDPOINT/$hostname/$package_name"
-}
-
-# Retrieve the list of installed packages
+# Get the list of installed packages
 installed_packages=$(dpkg -l | awk '/^ii/ {print $2}')
 
-# Loop through the installed packages and update the database via the API
+# Iterate through the list of installed packages and create or update the database records
 for package_name in $installed_packages; do
-    package_status=$(package_installed "$package_name")
-    data="{\"hostname\":\"$hostname\",\"packagename\":\"$package_name\",\"status\":\"$package_status\"}"
-
-    # Check if the package is in the database
-    response=$(send_read_request "$package_name")
+    # Check if the package is installed
+    package_status="Installed"
     
+    DATA=$(cat <<EOF
+    {
+        "hostname": "$escaped_hostname",
+        "packagename": "$package_name",
+        "installed": "$package_status"
+    }
+EOF
+)
+    # Send a request to create or update the data in the database
+    response=$(curl -s -X POST -H "Content-Type: application/json" -d "$DATA" "$API_CREATE_ENDPOINT")
+
     if [ -z "$response" ]; then
         # Data doesn't exist, so create a new entry
-        response=$(send_create_request "$data")
-        echo "Data inserted from $me for package $package_name."
+        echo "Data inserted for package $package_name."
     else
-        # Data exists, so update it
-        response=$(send_update_request "$package_name" "$data")
-        echo "Data updated from $me for package $package_name."
+        # Data already exists, so update it
+        response=$(curl -s -X PUT -H "Content-Type: application/json" -d "$DATA" "$API_UPDATE_ENDPOINT/$escaped_hostname/$package_name")
+        echo "Data updated for package $package_name."
     fi
 done
-
-echo "All package data is up to date."
