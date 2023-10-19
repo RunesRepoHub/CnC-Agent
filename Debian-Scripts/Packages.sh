@@ -38,15 +38,15 @@ for package_name in $installed_packages; do
     }
 EOF
 )
-    # Send a request to create or update the data in the database
-    response=$(curl -s -X POST -H "Content-Type: application/json" -d "$DATA" "$API_CREATE_ENDPOINT")
-
+    # Send a request to check if the data already exists in the database
+    response=$(curl -s -X GET "$API_UPDATE_ENDPOINT/$escaped_hostname/$package_name")
+    
     if [ -z "$response" ]; then
         # Data doesn't exist, so create a new entry
+        response=$(curl -s -X POST -H "Content-Type: application/json" -d "$DATA" "$API_CREATE_ENDPOINT")
         echo "Data inserted for package $package_name."
     else
-        # Data already exists, so update it
-        response=$(curl -s -X PUT -H "Content-Type: application/json" -d "$DATA" "$API_UPDATE_ENDPOINT/$escaped_hostname/$package_name")
-        echo "Data updated for package $package_name."
+        # Data already exists, no need to update or create
+        echo "Data already exists for package $package_name."
     fi
 done
