@@ -4,7 +4,6 @@
 source ~/CnC-Agent/config.sh
 
 databaseip=$(cat "$dbip")
-me=$(basename "$0")
 
 # Define a function to check if a package is installed
 package_installed() {
@@ -20,11 +19,11 @@ package_installed() {
 API_CREATE_ENDPOINT="http://$databaseip:3000/create/packages"
 API_UPDATE_ENDPOINT="http://$databaseip:3000/update/packages"
 
-# Modify the hostname to escape double quotes
-escaped_hostname=$(echo "$HOSTNAME" | sed 's/"/\\"/g')
+# Get the list of installed packages, excluding the hostname
+installed_packages=$(dpkg -l | awk '/^ii/ {print $2}' | grep -v "hostname")
 
-# Get the list of installed packages
-installed_packages=$(dpkg -l | awk '/^ii/ {print $2}')
+# Escape the hostname to handle double quotes
+escaped_hostname=$(echo "$HOSTNAME" | sed 's/"/\\"/g')
 
 # Iterate through the list of installed packages and create or update the database records
 for package_name in $installed_packages; do
