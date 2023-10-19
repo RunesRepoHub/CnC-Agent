@@ -13,48 +13,48 @@ API_UPDATE_ENDPOINT="http://$databaseip:3000/update/packages"
 
 # Function to retrieve all installed packages and their versions
 get_installed_packages() {
-    local package_info
-    while read -r package_line; do
-        # Extract package name and version from the dpkg -l output
-        package_name=$(echo "$package_line" | awk '{print $2}')
-        package_version=$(echo "$package_line" | awk '{print $3}')
-        package_info+="\"$package_name\": \"$package_version\", "
-    done < <(dpkg -l | awk '/^ii/ {print $2, $3}')
-    package_info="${package_info%,*}"  # Remove the trailing comma
-    echo "{$package_info}"
+    dpkg -l | awk '/^ii/ {print $2, $3}'
 }
 
-# Fetch data from the API for the specified hostname
-read_response=$(curl -s "$API_READ_ENDPOINT/$HOSTNAME")
+# Function to retrieve the database data for the specified hostname
+get_database_packages() {
+    local hostname="$1"
+    local db_data=$(curl -s "$API_READ_ENDPOINT/$hostname")
+    if [ -z "$db_data" ]; then
+        echo "[]"
+    else
+        echo "$db_data" | jq -c '.[0].packages'
+    fi
+}
 
-# Get information about all installed packages
-package_info_json=$(get_installed_packages)
+# Compare the collected data with the database data for each package
+installed_packages=$(get_installed_packages)
+for package_info in $installed_packages; do
+    package_name=$(echo "$package_info" | awk '{print $1}')
+    package_version=$(echo "$package_info" | awk '{print $2}')
 
-# Modify the hostname to escape double quotes
-escaped_hostname=$(echo "$HOSTNAME" | sed 's/"/\\"/g')
-
-if [ -n "$read_response" ]; then
-    # Data for this host already exists, so update it
-    DATA=$(cat <<EOF
-    {
-        "hostname": "$escaped_hostname",
-        "packages": $package_info_json
-    }
+    db_packages_json=$(get_database_packages "$HOSTNAME")
+    
+    if ! echo "$db_packages_json" | grep -q "\"packagename\": \"$package_name\", \"packageversion\": \"$package_version\""; then
+        # Data is different, so update or insert it
+        DATA=$(cat <<EOF
+        {
+            "hostname": "$HOSTNAME",
+            "packagename": "$package_name",
+            "packageversion": "$package_version"
+        }
 EOF
 )
-    # Update the data in the database
-    response=$(curl -X PUT -H "Content-Type: application/json" -d "$DATA" "$API_UPDATE_ENDPOINT/$escaped_hostname" >/dev/null 2>&1)
-    echo "Data updated from $me."
-else
-    # Data doesn't exist, so create a new entry
-    DATA=$(cat <<EOF
-    {
-        "hostname": "$escaped_hostname",
-        "packages": $package_info_json
-    }
-EOF
-)
-    # Create a new entry in the database
-    response=$(curl -X POST -H "Content-Type: application/json" -d "$DATA" "$API_CREATE_ENDPOINT" >/dev/null 2>&1)
-    echo "Data inserted from $me."
-fi
+        if [ -z "$db_packages_json" ] || [ "$db_packages_json" == "null" ]; then
+            # Data doesn't exist, so create a new entry
+            response=$(curl -X POST -H "Content-Type: application/json" -d "$DATA" "$API_CREATE_ENDPOINT" >/dev/null 2>&1)
+            echo "Data inserted from $me."
+        else {
+            # Data exists, so update it
+            response=$(curl -X PUT -H "Content-Type: application/json" -d "$DATA" "$API_UPDATE_ENDPOINT/$HOSTNAME" >/dev/null 2>&1)
+            echo "Data updated from $me."
+        }
+    fi
+done
+
+echo "All package data is up to date."
