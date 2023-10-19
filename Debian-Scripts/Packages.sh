@@ -37,9 +37,9 @@ for package_info in $installed_packages; do
     package_name=$(echo "$package_info" | awk '{print $1}')
     package_version=$(echo "$package_info" | awk '{print $2}')
 
-    data='{"hostname":"'"$hostname"'","package":"'"$package_name $package_version"'"}'
+    data='{"hostname":"'"$hostname"'","packagename":"'"$package_name"'","packageversion":"'"$package_version"'"}'
 
-    if ! echo "$db_packages_json" | grep -q "$package_name $package_version"; then
+    if ! echo "$db_packages_json" | jq -r '.[] | select(.packagename == "'"$package_name"'" and .packageversion == "'"$package_version"'")' >/dev/null; then
         if [ -z "$db_packages_json" ] || [ "$db_packages_json" == "null" ]; then
             # Data doesn't exist, so create a new entry
             response=$(curl -X POST -H "Content-Type: application/json" -d "$data" "$API_CREATE_ENDPOINT")
