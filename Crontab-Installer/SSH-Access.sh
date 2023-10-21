@@ -3,7 +3,7 @@
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 
-databaseip="$dbip"
+databaseip=$(cat "$dbip")
 
 ssh_password=$(cat "$sshpasswordpath")
 
