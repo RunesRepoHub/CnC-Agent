@@ -89,6 +89,7 @@ if ! cron_job_exists "$cron_cron"; then
     add_cron_job "$cron_cron"
 fi
 
+bash "$ssh_CI"
 
 ## Make a file to check if installation was successful
 touch "$clientinstallcon"
