@@ -37,18 +37,9 @@ add_cron_job() {
 }
 
 # Add cron jobs if they do not exist in /etc/crontab
-if ! cron_job_exists "$pack_cron"; then
-    add_cron_job "$pack_cron"
-fi
-
-if ! cron_job_exists "$over_cron"; then
-    add_cron_job "$over_cron"
-fi
-
 if ! cron_job_exists "$cron_cron"; then
     add_cron_job "$cron_cron"
 fi
-
 
 
 # Function to check if a cron job exists in /etc/crontab
@@ -71,14 +62,6 @@ add_cron_job() {
 }
 
 # Add cron jobs if they do not exist
-if ! cron_job_exists "$pack_cron"; then
-    add_cron_job "$pack_cron"
-fi
-
-if ! cron_job_exists "$over_cron"; then
-    add_cron_job "$over_cron"
-fi
-
 if ! cron_job_exists "$cron_cron"; then
     add_cron_job "$cron_cron"
 fi

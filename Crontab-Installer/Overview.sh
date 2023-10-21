@@ -17,6 +17,7 @@ touch "$dbip"
 echo "$databaseip" > "$dbip"
 
 
+
 # Function to check if a cron job exists in /etc/crontab
 cron_job_exists() {
     local script_path="$1"
@@ -37,17 +38,10 @@ add_cron_job() {
 }
 
 # Add cron jobs if they do not exist in /etc/crontab
-if ! cron_job_exists "$pack_cron"; then
-    add_cron_job "$pack_cron"
-fi
-
 if ! cron_job_exists "$over_cron"; then
     add_cron_job "$over_cron"
 fi
 
-if ! cron_job_exists "$cron_cron"; then
-    add_cron_job "$cron_cron"
-fi
 
 
 
@@ -71,17 +65,10 @@ add_cron_job() {
 }
 
 # Add cron jobs if they do not exist
-if ! cron_job_exists "$pack_cron"; then
-    add_cron_job "$pack_cron"
-fi
-
 if ! cron_job_exists "$over_cron"; then
     add_cron_job "$over_cron"
 fi
 
-if ! cron_job_exists "$cron_cron"; then
-    add_cron_job "$cron_cron"
-fi
 
 
 ## Make a file to check if installation was successful
