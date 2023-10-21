@@ -8,15 +8,6 @@ sleep 5
 
 me=$(basename "$0")
 
-## Get database IP address
-echo -e "${Green}Input Database IP${NC}"
-read -p "Database IP: " databaseip
-
-## Save database IP address
-touch "$dbip"
-echo "$databaseip" > "$dbip"
-
-
 # Function to check if a cron job exists in /etc/crontab
 cron_job_exists() {
     local script_path="$1"

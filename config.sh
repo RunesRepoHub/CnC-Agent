@@ -46,6 +46,11 @@ pack_cron="/root/CnC-Agent/Debian-Scripts/Packages.sh"
 over_cron="/root/CnC-Agent/Debian-Scripts/Overview.sh"
 cron_cron="/root/CnC-Agent/Debian-Scripts/Cronjob.sh"
 
+# Crontab-Installer.sh 
+pack_cron_CI="/root/CnC-Agent/Crontab-Installer/Packages.sh"
+over_cron_CI="/root/CnC-Agent/Crontab-Installer/Overview.sh"
+cron_cron_CI="/root/CnC-Agent/Crontab-Installer/Cronjob.sh"
+
 
 # Install-Agent.sh
 deb_ins="/root/CnC-Agent/Debian-Installer.sh"
