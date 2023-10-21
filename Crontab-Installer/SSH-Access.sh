@@ -3,6 +3,8 @@
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 
+databaseip="$dbip"
+
 ssh_password=$(cat "$sshpasswordpath")
 
 # Get the server name from the hostname
