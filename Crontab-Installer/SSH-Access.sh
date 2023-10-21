@@ -3,6 +3,8 @@
 # Source the configuration script
 source ~/CnC-Agent/config.sh
 
+ssh_password=$(cat "$sshpasswordpath")
+
 # Get the server name from the hostname
 server_name=$(hostname)
 
