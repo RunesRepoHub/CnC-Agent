@@ -31,7 +31,7 @@ Version="curl https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Producti
 
 # Global Variables
 dbip="/root/CnC-Agent/.databaseip"
-ssh_password_path="/root/CnC-Agent/.sshpassword"
+sshpasswordpath="/root/CnC-Agent/.sshpassword"
 serverinstallcon="/root/CnC-WebGUI/.serverinstallcon"
 clientinstallcon="/root/CnC-Agent/.clientinstallcon"
 

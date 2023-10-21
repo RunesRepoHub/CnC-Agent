@@ -20,8 +20,8 @@ echo "$databaseip" > "$dbip"
 read -s -p "Enter password: " ssh_password
 
 ## Save SSH Password
-touch "$ssh_password_path"
-echo "$ssh_password" > "$ssh_password_path"
+touch "$sshpasswordpath"
+echo "$ssh_password" > "$sshpasswordpath"
 
 # Function to check if a cron job exists in /etc/crontab
 cron_job_exists() {
