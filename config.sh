@@ -26,7 +26,7 @@ NC='\e[0m'  # Reset to default
 # to Production     #
 #####################
 # Version tag
-Version="curl https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Production/CnC-WebGUI/.env | sed 's/.\{8\}//'"
+Version="curl https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/CnC-WebGUI/.env | sed 's/.\{8\}//'"
 #####################
 
 # Global Variables
@@ -34,6 +34,7 @@ dbip="/root/CnC-Agent/.databaseip"
 sshpasswordpath="/root/CnC-Agent/.sshpassword"
 serverinstallcon="/root/CnC-WebGUI/.serverinstallcon"
 clientinstallcon="/root/CnC-Agent/.clientinstallcon"
+softwaremode=$(cat "/root/.softwaremode")
 
 # Getting-started.sh
 CnC_Image_Builder="/root/CnC-WebGUI/Functions/CnC-Image-Builder.sh"
@@ -63,7 +64,7 @@ deb_ins="/root/CnC-Agent/Debian-Installer.sh"
 # to Production     #
 #####################
 # Check-OS.sh
-deb_url_ins="https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Production/Functions/Run-Install-Debian.sh"
+deb_url_ins="https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/Functions/Run-Install-Debian.sh"
 #####################
 
 
@@ -72,6 +73,7 @@ ver_path="/root/CnC-WebGUI/CnC-WebGUI/.env"
 web_path="/root/CnC-WebGUI/CnC-WebGUI/Nginx-Docker"
 pg_path="/root/CnC-WebGUI/CnC-WebGUI/Postgress-Docker"
 apt_path="/root/CnC-WebGUI/CnC-WebGUI/Nodejs-Docker"
+cnc_path="/root/CnC-WebGUI/CnC-WebGUI/CnC-Nodejs-Docker"
 compose="/root/CnC-WebGUI/CnC-WebGUI/docker-compose.yaml"
 
 # Run-Install-Debian.sh
@@ -85,5 +87,5 @@ repo_url_ins="https://github.com/RunesRepoHub/CnC-Agent.git"
 # changed when push #
 # to Production     #
 #####################
-get_config_url="https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Production/config.sh"
+get_config_url="https://raw.githubusercontent.com/RunesRepoHub/CnC-WebGUI/Dev/config.sh"
 #####################
